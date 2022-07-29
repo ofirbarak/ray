@@ -909,7 +909,8 @@ class TorchPolicy(Policy):
                 },
             )
         else:
-            traced = torch.jit.trace(self.model, (dummy_inputs, state_ins, seq_lens))
+            # traced = torch.jit.trace(self.model, (dummy_inputs, state_ins, seq_lens))
+            traced = torch.jit.trace(torch.nn.Sequential(self.model._hidden_layers, self.model.advantage_module), dummy_inputs['obs'][0].reshape(1,-1))
             file_name = os.path.join(export_dir, "model.pt")
             traced.save(file_name)
 

@@ -1,4 +1,5 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import json
 import logging
 import queue
 from socketserver import ThreadingMixIn
@@ -187,7 +188,8 @@ def _make_handler(rollout_worker, samples_queue, metrics_queue):
         def do_POST(self):
             content_len = int(self.headers.get("Content-Length"), 0)
             raw_body = self.rfile.read(content_len)
-            parsed_input = pickle.loads(raw_body)
+            # parsed_input = pickle.loads(raw_body)
+            parsed_input = json.loads(raw_body)
             try:
                 response = self.execute_command(parsed_input)
                 self.send_response(200)
